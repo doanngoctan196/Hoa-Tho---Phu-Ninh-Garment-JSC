@@ -832,20 +832,22 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
 
   /* ================= contact form -> opens the visitor's email app ================= */
   var form = $('#form'), err = $('#err');
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var f = new FormData(form), t = D[lang];
-    var name = String(f.get('name') || '').trim(), msg = String(f.get('message') || '').trim();
-    var mail = String(f.get('email') || '').trim(), co = String(f.get('company') || '').trim();
-    var mk = $('#f-mk'); var mkText = mk.options[mk.selectedIndex].textContent;
-    if (!name || !msg) { err.hidden = false; (name ? $('#f-msg') : $('#f-name')).focus(); return; }
-    err.hidden = true;
-    var body = msg + '\n\n---\n' + t.mailName + ': ' + name + (mail ? '\n' + t.mailEmail + ': ' + mail : '') + (co ? '\n' + t.mailCo + ': ' + co : '') + '\n' + t.mailMk + ': ' + mkText;
-    var subject = t.mailSubject + name + (co ? ' (' + co + ')' : '');
-    var url = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-    window.__ht.lastMailto = url;
-    window.location.href = url;
-  });
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var f = new FormData(form), t = D[lang];
+      var name = String(f.get('name') || '').trim(), msg = String(f.get('message') || '').trim();
+      var mail = String(f.get('email') || '').trim(), co = String(f.get('company') || '').trim();
+      var mk = $('#f-mk'); var mkText = mk.options[mk.selectedIndex].textContent;
+      if (!name || !msg) { err.hidden = false; (name ? $('#f-msg') : $('#f-name')).focus(); return; }
+      err.hidden = true;
+      var body = msg + '\n\n---\n' + t.mailName + ': ' + name + (mail ? '\n' + t.mailEmail + ': ' + mail : '') + (co ? '\n' + t.mailCo + ': ' + co : '') + '\n' + t.mailMk + ': ' + mkText;
+      var subject = t.mailSubject + name + (co ? ' (' + co + ')' : '');
+      var url = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      window.__ht.lastMailto = url;
+      window.location.href = url;
+    });
+  }
 
   window.__ht = { applyLang: applyLang, D: D, kick: kick, hasLenis: function () { return !!lenis; } };
 })();
