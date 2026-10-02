@@ -55,16 +55,14 @@ section[id]{scroll-margin-top:var(--hdr)}
 .btn.ghost:hover{background:var(--ink);color:var(--paper);border-style:solid}
 .hdr-cta.btn{min-height:44px;padding:0 20px;font-size:.88rem}
 
-/* ---------- scroll seam on the left edge ---------- */
-.rail{position:fixed;left:6px;top:0;bottom:0;width:12px;z-index:45;pointer-events:none}
-.rail-line{position:absolute;left:5px;top:0;bottom:0;width:2px;background:repeating-linear-gradient(to bottom,var(--thread) 0 7px,transparent 7px 12px)}
-.js .rail-line{clip-path:inset(0 0 100% 0)}
-.rail-needle{position:absolute;left:2px;top:0;width:8px;height:18px;background:var(--thread);clip-path:polygon(0 0,100% 0,50% 100%);opacity:0;will-change:transform}
-.js .rail-needle{opacity:1}
+/* ---------- thread that pulls the next page up (fixed overlay) ---------- */
+.pull{position:fixed;left:0;top:0;width:100%;height:100%;z-index:40;pointer-events:none;overflow:visible}
+.pull path.th{fill:none;stroke:var(--thread);stroke-width:2.6;stroke-linecap:round}
+.pull path.th2{fill:none;stroke:rgba(255,255,255,.35);stroke-width:.8;stroke-linecap:round}
 
-/* ---------- hero (pinned, scroll-scrubbed stitching) ---------- */
-.hero-track{height:270vh;height:270svh;position:relative}
-.hero-sticky{position:sticky;top:0;height:100vh;height:100svh;display:flex;align-items:center;padding:calc(var(--hdr) + 14px + env(safe-area-inset-top)) var(--pad) 28px calc(var(--pad) + 10px);
+/* ---------- hero (static) ---------- */
+.hero{position:relative}
+.hero-sticky{position:relative;min-height:calc(100vh - 56px);min-height:calc(100svh - 56px);display:flex;align-items:center;padding:calc(var(--hdr) + 14px + env(safe-area-inset-top)) var(--pad) 28px calc(var(--pad) + 10px);
   background-color:var(--paper);
   background-image:linear-gradient(rgba(16,27,51,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(16,27,51,.055) 1px,transparent 1px);
   background-size:32px 32px}
@@ -75,7 +73,7 @@ section[id]{scroll-margin-top:var(--hdr)}
 .hero-lead{margin-top:22px;max-width:46ch;font-size:1.05rem;color:rgba(16,27,51,.82)}
 .hero-cta{margin-top:30px;display:flex;flex-wrap:wrap;gap:12px}
 .hero-art{display:flex;justify-content:center;align-items:center;min-height:0}
-.hero-art svg{height:min(76vh,640px);height:min(76svh,640px);width:auto;max-width:100%;overflow:visible}
+.hero-art svg{height:min(66vh,600px);height:min(66svh,600px);width:auto;max-width:100%;overflow:visible}
 .hero-hint{position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);font-size:.82rem;font-weight:500;color:rgba(16,27,51,.7);display:flex;align-items:center;gap:10px;white-space:nowrap;pointer-events:none}
 .hero-hint i{width:2px;height:22px;background:repeating-linear-gradient(to bottom,var(--thread) 0 5px,transparent 5px 9px)}
 @media (max-width:820px){
@@ -84,12 +82,12 @@ section[id]{scroll-margin-top:var(--hdr)}
   .hero-lead,.hero-cta .ghost{display:none}
   .hero-cta{margin-top:18px}
   .hero-co{margin-bottom:10px;font-size:.85rem}
-  .hero-art svg{height:min(42vh,380px);height:min(42svh,380px)}
+  .hero-art svg{height:min(36vh,360px);height:min(36svh,360px)}
   .hero-hint{display:none}
 }
 @media (max-width:820px) and (max-height:600px){
   .hero-co{display:none}
-  .hero-art svg{height:min(32vh,380px);height:min(32svh,380px)}
+  .hero-art svg{height:min(30vh,380px);height:min(30svh,380px)}
 }
 @media (max-height:480px) and (min-width:821px){
   .hero h1{font-size:clamp(1.4rem,8.5vh,2.4rem)}
@@ -103,10 +101,11 @@ section[id]{scroll-margin-top:var(--hdr)}
 .js .hero h1{animation:wipe 1.3s cubic-bezier(.65,0,.2,1) .15s both}
 .js .hero-co,.js .hero-lead,.js .hero-cta{animation:rise .8s ease 1s both}
 .js .hero-art{animation:cut 1.2s cubic-bezier(.65,0,.2,1) .35s both}
-.js .hero:not(.ready) .stitch{visibility:hidden}
 
 /* ---------- generic sections ---------- */
-.sec{padding:clamp(76px,12vw,150px) var(--pad) clamp(76px,12vw,150px) calc(var(--pad) + 8px);position:relative}
+.sec{padding:clamp(76px,12vw,150px) var(--pad) clamp(76px,12vw,150px) calc(var(--pad) + 8px);position:relative;box-shadow:0 -26px 40px -26px rgba(16,27,51,.5)}
+.sec::before{content:"";position:absolute;left:0;right:0;top:10px;border-top:2px dashed var(--thread);opacity:.85;pointer-events:none}
+.sec .wrap{will-change:transform}
 .wrap{max-width:1180px;margin:0 auto}
 .sec h2{font-size:clamp(1.9rem,5.2vw,3.6rem);max-width:18ch}
 .sec-lead{margin-top:20px;max-width:54ch;font-size:1.08rem;color:rgba(16,27,51,.82)}
@@ -226,6 +225,12 @@ section[id]{scroll-margin-top:var(--hdr)}
 .err[hidden]{display:none}
 .fm .btn{width:100%}
 .fm .hint{font-size:.85rem;color:rgba(16,27,51,.7)}
+.sent{border:1.5px dashed var(--thread);border-radius:4px;padding:16px;display:grid;gap:12px;background:#FFF7F1}
+.sent[hidden]{display:none}
+.sent p{font-weight:600;font-size:.95rem}
+.sent .acts{display:flex;flex-wrap:wrap;gap:10px}
+.sent .btn{width:auto;min-height:44px;padding:0 18px;font-size:.9rem}
+.sent .copied{font-size:.88rem;font-weight:600;color:var(--thread-d)}
 @media (min-width:900px){.ct-grid{grid-template-columns:1fr 1fr}}
 
 /* ---------- footer ---------- */
@@ -237,11 +242,8 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
   .js [data-rv]{clip-path:none!important}
-  .js .rail-line{clip-path:none!important}
   .js .thread{--p:1!important}
-  .hero-track{height:auto}
-  .hero-sticky{position:relative;height:auto;min-height:100vh;min-height:100svh}
-  .hero-hint{display:none}
+  .hero-hint,.pull{display:none}
   .card{position:relative;top:auto}
 }
 </style>
@@ -276,11 +278,11 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
   </div>
 </header>
 
-<div class="rail" aria-hidden="true"><i class="rail-line" id="railLine"></i><i class="rail-needle" id="railNeedle"></i></div>
+<svg class="pull" id="pull" aria-hidden="true" focusable="false"></svg>
 
 <main id="main">
 <!-- ================= HERO ================= -->
-<section class="hero hero-track" id="hero" aria-labelledby="hero-h">
+<section class="hero" id="hero" aria-labelledby="hero-h">
   <div class="hero-sticky" id="top">
     <div class="hero-grid">
       <div class="hero-copy">
@@ -293,7 +295,7 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
         </div>
       </div>
       <div class="hero-art">
-        <svg id="heroSvg" viewBox="0 0 400 580" role="img" aria-label="Trousers being stitched with orange thread as you scroll" data-i18n-aria="hero_art">
+        <svg id="heroSvg" viewBox="0 0 400 580" role="img" aria-label="Trousers with orange topstitching" data-i18n-aria="hero_art">
           <defs></defs>
           <g class="fabric">
             <path d="M108 64 L292 64 L306 176 L310 536 L226 536 L208 268 Q200 250 192 268 L174 536 L90 536 L94 176 Z" fill="#1F3A5F" stroke="#101B33" stroke-width="3" stroke-linejoin="round"/>
@@ -306,28 +308,22 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
             <circle cx="200" cy="52" r="5.5" fill="#CDB98A" stroke="#101B33" stroke-width="2"/>
           </g>
           <g fill="none" stroke="#E4631F" stroke-width="2.6" stroke-dasharray="8 6">
-            <path class="stitch" d="M108 44 L292 44"/>
-            <path class="stitch" d="M108 60 L292 60"/>
-            <path class="stitch" d="M200 70 L200 158 Q200 176 182 174"/>
-            <path class="stitch" d="M112 74 Q152 98 154 168"/>
-            <path class="stitch" d="M288 74 Q248 98 246 168"/>
-            <path class="stitch" d="M101 186 L98 526"/>
-            <path class="stitch" d="M299 186 L302 526"/>
-            <path class="stitch" d="M184 282 L168 526"/>
-            <path class="stitch" d="M216 282 L232 526"/>
-            <path class="stitch" d="M96 516 L174 516"/>
-            <path class="stitch" d="M227 516 L304 516"/>
-          </g>
-          <g id="needle" opacity="0">
-            <line x1="0" y1="0" x2="-38" y2="0" stroke="#101B33" stroke-width="3.6" stroke-linecap="round"/>
-            <line x1="0" y1="0" x2="-38" y2="0" stroke="#D5DDE6" stroke-width="1.8" stroke-linecap="round"/>
-            <ellipse cx="-31" cy="0" rx="5" ry="1.3" fill="#101B33"/>
-            <path d="M-31 0 C-46 -8 -50 -26 -74 -34" fill="none" stroke="#E4631F" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M108 44 L292 44"/>
+            <path d="M108 60 L292 60"/>
+            <path d="M200 70 L200 158 Q200 176 182 174"/>
+            <path d="M112 74 Q152 98 154 168"/>
+            <path d="M288 74 Q248 98 246 168"/>
+            <path d="M101 186 L98 526"/>
+            <path d="M299 186 L302 526"/>
+            <path d="M184 282 L168 526"/>
+            <path d="M216 282 L232 526"/>
+            <path d="M96 516 L174 516"/>
+            <path d="M227 516 L304 516"/>
           </g>
         </svg>
       </div>
     </div>
-    <div class="hero-hint" id="heroHint" aria-hidden="true"><i></i><span data-i18n="hero_hint">Scroll to pull the thread</span></div>
+    <div class="hero-hint" id="heroHint" aria-hidden="true"><i></i><span data-i18n="hero_hint">Scroll to pull up the next page</span></div>
   </div>
 </section>
 
@@ -505,6 +501,15 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
         <p class="err" id="err" role="alert" hidden data-i18n="err">Please enter your name and a message.</p>
         <button class="btn" type="submit" data-i18n="btn_send">Open email to send</button>
         <p class="hint" data-i18n="fm_note">This opens your email app with the message ready to send.</p>
+        <div class="sent" id="sent" hidden>
+          <p data-i18n="sent_t">Email did not open? Use one of these:</p>
+          <div class="acts">
+            <a class="btn" id="aApp" href="#" data-i18n="sent_app">Open email app</a>
+            <a class="btn ghost" id="aGmail" href="#" target="_blank" rel="noopener" data-i18n="sent_gmail">Open in Gmail</a>
+            <button class="btn ghost" id="bCopy" type="button" data-i18n="sent_copy">Copy message</button>
+          </div>
+          <span class="copied" id="copied" role="status" aria-live="polite"></span>
+        </div>
       </form>
     </div>
   </div>
@@ -544,8 +549,8 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
       hero_co: 'Hoa Tho - Phu Ninh Garment JSC',
       hero_h: 'Trousers sewn for Europe, America and Japan, from central Vietnam.',
       hero_lead: 'We focus on one garment and sew it with the care export buyers expect. Part of the Hoa Tho group, whose roots go back to 1962.',
-      hero_cta1: 'Request a quote', hero_cta2: 'See our trousers', hero_hint: 'Scroll to pull the thread',
-      hero_art: 'Trousers being stitched with orange thread as you scroll',
+      hero_cta1: 'Request a quote', hero_cta2: 'See our trousers', hero_hint: 'Scroll to pull up the next page',
+      hero_art: 'Trousers with orange topstitching',
       ab_h: 'Part of a textile group that began in 1962.',
       ab_p1: 'Hòa Thọ started in 1962 as a weaving mill in Da Nang and grew into one of the largest garment groups in Vietnam, a member of Vinatex. Hoa Tho - Phu Ninh Garment JSC was founded in 2012 with a factory in the Chợ Lò Industrial Cluster, Phú Ninh.',
       ab_p2: 'Our focus is trousers. One product, made again and again and made well, is how we keep fit, finish and delivery consistent.',
@@ -583,31 +588,32 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
       o_eu: 'European Union', o_us: 'United States', o_jp: 'Japan', o_ot: 'Other',
       err: 'Please enter your name and a message.', btn_send: 'Open email to send',
       fm_note: 'This opens your email app with the message ready to send.',
+      sent_t: 'Email did not open? Use one of these:', sent_app: 'Open email app', sent_gmail: 'Open in Gmail', sent_copy: 'Copy message', copied: 'Copied. Paste it into an email to phuninhhoatho@gmail.com.',
       ft_tax: 'Tax code', ft_rights: 'All rights reserved.',
       langLabel: 'Chuyển sang tiếng Việt', langBtn: 'VI', skip: 'Skip to content',
       mailSubject: 'Inquiry from ', mailName: 'Name', mailEmail: 'Email', mailCo: 'Company', mailMk: 'Destination market'
     },
     vi: {
       title: 'Công Ty Cổ Phần May Hòa Thọ - Phú Ninh | Sản xuất quần xuất khẩu',
-      desc: 'Công ty Cổ phần May Hòa Thọ - Phú Ninh may quần cho khách hàng tại EU, Mỹ và Nhật Bản. Thuộc hệ thống Hòa Thọ, với gốc rễ từ năm 1962.',
+      desc: 'Công Ty Cổ Phần May Hòa Thọ - Phú Ninh may quần cho khách hàng tại EU, Mỹ và Nhật Bản. Thuộc hệ thống Hòa Thọ, với gốc rễ từ năm 1962.',
       brand: 'Hòa Thọ - Phú Ninh', n_about: 'Giới thiệu', n_products: 'Sản phẩm', n_markets: 'Thị trường', n_process: 'Quy trình', n_contact: 'Liên hệ',
       hdr_cta: 'Yêu cầu báo giá',
       hero_co: 'Công Ty Cổ Phần May Hòa Thọ - Phú Ninh',
       hero_h: 'Quần may xuất khẩu cho EU, Mỹ và Nhật, từ miền Trung Việt Nam.',
       hero_lead: 'Chúng tôi tập trung vào một sản phẩm và may với sự kỹ lưỡng mà khách hàng xuất khẩu mong đợi. Thuộc hệ thống Hòa Thọ, với gốc rễ từ năm 1962.',
-      hero_cta1: 'Yêu cầu báo giá', hero_cta2: 'Xem các dòng quần', hero_hint: 'Cuộn để kéo chỉ',
-      hero_art: 'Chiếc quần được may bằng chỉ cam khi bạn cuộn trang',
+      hero_cta1: 'Yêu cầu báo giá', hero_cta2: 'Xem các dòng quần', hero_hint: 'Cuộn để kéo trang tiếp theo lên',
+      hero_art: 'Chiếc quần với đường chỉ diễu màu cam',
       ab_h: 'Thuộc hệ thống dệt may có gốc rễ từ năm 1962.',
-      ab_p1: 'Hòa Thọ khởi đầu từ năm 1962 với nhà máy dệt tại Đà Nẵng, nay là một trong những doanh nghiệp may lớn của Việt Nam và là thành viên của Vinatex. Công ty Cổ phần May Hòa Thọ - Phú Ninh được thành lập năm 2012, với nhà máy tại Cụm công nghiệp Chợ Lò, Phú Ninh.',
+      ab_p1: 'Hòa Thọ khởi đầu từ năm 1962 với nhà máy dệt tại Đà Nẵng, nay là một trong những doanh nghiệp may lớn của Việt Nam và là thành viên của Vinatex. Công Ty Cổ Phần May Hòa Thọ - Phú Ninh được thành lập năm 2012, với nhà máy tại Cụm công nghiệp Chợ Lò, Phú Ninh.',
       ab_p2: 'Sản phẩm trọng tâm của chúng tôi là quần. Tập trung vào một sản phẩm giúp form dáng, đường may và tiến độ giao hàng luôn ổn định.',
       fk_reg: 'Tên đăng ký', fk_en: 'Tên quốc tế', fk_est: 'Đăng ký kinh doanh', fv_est: '15/03/2012',
-      fk_grp: 'Hệ thống', fv_grp: 'Tổng Công ty CP Dệt May Hòa Thọ, thành viên của Vinatex',
+      fk_grp: 'Hệ thống', fv_grp: 'Tổng công ty CP Dệt May Hòa Thọ, thành viên của Vinatex',
       fk_loc: 'Nhà máy', fv_loc: 'Cụm công nghiệp Chợ Lò, xã Chiên Đàn, TP. Đà Nẵng, Việt Nam', fk_tax: 'Mã số thuế',
       tl1_t: 'Nhà máy Dệt Hòa Thọ ra đời tại Đà Nẵng', tl1_p: 'Tiền thân của Tổng công ty Dệt May Hòa Thọ.',
       tl2_t: 'Chuyển thành Tổng công ty cổ phần', tl2_p: 'Tổng công ty CP Dệt May Hòa Thọ chính thức đi vào hoạt động từ tháng 2/2007.',
       tl3_t: 'Thành lập May Hòa Thọ - Phú Ninh', tl3_p: 'Đăng ký kinh doanh ngày 15/3, bắt đầu hoạt động từ ngày 1/7.',
       tl4_k: 'Hôm nay', tl4_t: 'Quần cho khách hàng tại EU, Mỹ và Nhật', tl4_p: 'Một nhà máy tập trung vào quần, được hỗ trợ bởi hệ thống có nhiều thập kỷ kinh nghiệm xuất khẩu.',
-      pr_h: 'Quần là việc chúng tôi làm.', pr_lead: 'Các dòng quần chúng tôi sẵn sàng sản xuất.',
+      pr_h: 'Chúng tôi chuyên may quần.', pr_lead: 'Các dòng quần chúng tôi sẵn sàng sản xuất.',
       c1_t: 'Quần tây và smart-casual', c1_p: 'Quần dệt thoi với cạp gọn, ly quần sắc nét và đường diễu đều, may theo bộ size ổn định từ thùng hàng đầu đến thùng cuối.', c1_tags: 'Dệt thoi|Ly trơn|Có ly',
       c2_t: 'Quần workwear', c2_p: 'Dành cho mặc hằng ngày: gia cố các điểm chịu lực, bọ, túi tiện ích và đường may bền sau nhiều lần giặt.', c2_tags: 'Gia cố đường may|Túi tiện ích|Vải dày',
       c3_t: 'Quần chống nhăn', c3_p: 'Vải dễ chăm sóc, được ủi và hoàn thiện để hàng phẳng phiu khi giao và đẹp ngay khi mở túi.', c3_tags: 'Dễ chăm sóc|Ủi hoàn thiện|Tiện đi lại',
@@ -617,7 +623,7 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
       mk_us_t: 'Hoa Kỳ', mk_us_p: 'Đơn hàng lớn, thời gian giao nghiêm ngặt và các đợt đánh giá của nhà bán lẻ. Chúng tôi sắp xếp chuyền theo ngày giao hàng và giữ bộ size nhất quán giữa các đơn lặp lại.',
       mk_jp_t: 'Nhật Bản', mk_jp_p: 'Khách hàng kiểm tra rất kỹ: đường may thẳng, hoàn thiện sạch và đóng gói cẩn thận. Chúng tôi may và kiểm tra theo chuẩn đó.',
       st_h: 'Có hệ thống Hòa Thọ phía sau.',
-      st1_t: 'Thành viên của Vinatex', st1_p: 'Tổng công ty thuộc Tập đoàn Dệt may Việt Nam.',
+      st1_t: 'Thành viên của Vinatex', st1_p: 'Tổng công ty thuộc Tập đoàn Dệt May Việt Nam.',
       st2_t: 'ISO 9001 và ISO 14001', st2_p: 'Hệ thống quản lý chất lượng và môi trường được vận hành ở cấp tổng công ty.',
       st3_t: 'Kinh nghiệm với thương hiệu', st3_p: 'Tổng công ty đã sản xuất cho các nhãn hiệu như Snickers, Haggar, Calvin Klein và Burton.',
       st_note: 'Thông tin cấp tổng công ty từ nguồn công khai. Hãy hỏi chúng tôi về tiêu chuẩn áp dụng cho đơn hàng của bạn.',
@@ -634,6 +640,7 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
       o_eu: 'Liên minh châu Âu', o_us: 'Hoa Kỳ', o_jp: 'Nhật Bản', o_ot: 'Khác',
       err: 'Vui lòng nhập tên và nội dung.', btn_send: 'Mở email để gửi',
       fm_note: 'Thao tác này mở ứng dụng email với nội dung đã soạn sẵn.',
+      sent_t: 'Email chưa mở? Hãy dùng một trong các cách sau:', sent_app: 'Mở ứng dụng email', sent_gmail: 'Mở bằng Gmail', sent_copy: 'Sao chép nội dung', copied: 'Đã sao chép. Hãy dán vào email gửi tới phuninhhoatho@gmail.com.',
       ft_tax: 'Mã số thuế', ft_rights: 'Bảo lưu mọi quyền.',
       langLabel: 'Switch to English', langBtn: 'EN', skip: 'Chuyển đến nội dung',
       mailSubject: 'Yêu cầu từ ', mailName: 'Họ tên', mailEmail: 'Email', mailCo: 'Công ty', mailMk: 'Thị trường đến'
@@ -672,8 +679,9 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
   var HDR = 60;
   $$('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
-      var id = a.getAttribute('href'); if (id.length < 2) return;
-      var target = $(id); if (!target) return;
+      var id = a.getAttribute('href') || ''; if (id.charAt(0) !== '#' || id.length < 2) return;
+      var target = null; try { target = $(id); } catch (er) { return; }
+      if (!target) return;
       e.preventDefault();
       if (lenis) lenis.scrollTo(target, { offset: id === '#top' ? 0 : -HDR, duration: 1.4 });
       else target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
@@ -708,70 +716,50 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
   function hdrState() { hdr.classList.toggle('sc', (window.pageYOffset || 0) > 12); }
   window.addEventListener('scroll', hdrState, { passive: true }); hdrState();
 
-  /* ---- left-edge seam: the thread follows page progress ---- */
-  var railLine = $('#railLine'), railNeedle = $('#railNeedle');
-  addScrub(function () {
-    var max = document.documentElement.scrollHeight - window.innerHeight;
-    return max > 0 ? clamp((window.pageYOffset || 0) / max) : 0;
-  }, function (v) {
-    railLine.style.clipPath = 'inset(0 0 ' + ((1 - v) * 100).toFixed(2) + '% 0)';
-    railNeedle.style.transform = 'translate3d(0,' + (v * (window.innerHeight - 18)).toFixed(1) + 'px,0)';
-  }, 0.2);
-
-  /* ---- hero: stitches are drawn by scroll ---- */
-  var hero = $('#hero');
-  (function initHero() {
-    var svg = $('#heroSvg'), sticky = $('.hero-sticky', hero);
-    var needle = $('#needle');
-    try {
-      var NS = 'http://www.w3.org/2000/svg';
-      var defs = $('defs', svg);
-      var segs = $$('.stitch', svg).map(function (p, i) {
-        var len = p.getTotalLength();
-        var m = document.createElementNS(NS, 'mask');
-        m.setAttribute('id', 'sm' + i); m.setAttribute('maskUnits', 'userSpaceOnUse');
-        m.setAttribute('x', '-60'); m.setAttribute('y', '-60'); m.setAttribute('width', '520'); m.setAttribute('height', '700');
-        var mp = document.createElementNS(NS, 'path');
-        mp.setAttribute('d', p.getAttribute('d')); mp.setAttribute('fill', 'none'); mp.setAttribute('stroke', '#fff'); mp.setAttribute('stroke-width', '12');
-        mp.style.strokeDasharray = len; mp.style.strokeDashoffset = len;
-        m.appendChild(mp); defs.appendChild(m);
-        p.setAttribute('mask', 'url(#sm' + i + ')');
-        return { p: p, len: len, mp: mp };
-      });
-      var total = segs.reduce(function (a, s) { return a + s.len; }, 0);
-
-      var hint = $('#heroHint');
-      function setStitch(v) {
-        var d = v * total, idx = -1, on = 0;
-        for (var i = 0; i < segs.length; i++) {
-          var s = segs[i], o = clamp(d / s.len);
-          s.mp.style.strokeDashoffset = (s.len * (1 - o)).toFixed(2);
-          if (o > 0) { idx = i; on = o; }
-          d -= s.len;
-        }
-        if (idx < 0) { idx = 0; on = 0; }
-        var seg = segs[idx], L = on * seg.len;
-        var a = seg.p.getPointAtLength(Math.max(0, L - 1.5)), b = seg.p.getPointAtLength(Math.min(seg.len, L + 1.5));
-        var pt = seg.p.getPointAtLength(L);
-        var ang = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
-        needle.setAttribute('transform', 'translate(' + pt.x.toFixed(1) + ' ' + pt.y.toFixed(1) + ') rotate(' + ang.toFixed(1) + ')');
-        needle.setAttribute('opacity', (v <= 0.002 || v >= 0.998) ? '0' : '1');
+  /* ---- the thread: a needle stuck in the top edge of each page, thread running up to the top of the screen ---- */
+  var NS = 'http://www.w3.org/2000/svg';
+  var pullSvg = $('#pull'), hint = $('#heroHint');
+  var pulls = $$('main > section.sec').map(function (sec, i) {
+    var g = document.createElementNS(NS, 'g');
+    var th = document.createElementNS(NS, 'path'); th.setAttribute('class', 'th');
+    var th2 = document.createElementNS(NS, 'path'); th2.setAttribute('class', 'th2');
+    var nd = document.createElementNS(NS, 'g');
+    nd.innerHTML = '<line x1="0" y1="9" x2="0" y2="-36" stroke="#101B33" stroke-width="3.8" stroke-linecap="round"/>' +
+      '<line x1="0" y1="9" x2="0" y2="-36" stroke="#DCE3EA" stroke-width="1.8" stroke-linecap="round"/>' +
+      '<ellipse cx="0" cy="-29" rx="1.3" ry="5" fill="#101B33"/>';
+    g.appendChild(th); g.appendChild(th2); g.appendChild(nd); g.style.display = 'none';
+    if (pullSvg) pullSvg.appendChild(g);
+    return { sec: sec, g: g, th: th, th2: th2, nd: nd, wrap: $('.wrap', sec), i: i, shown: false };
+  });
+  var pullQueued = false;
+  function updatePull() {
+    pullQueued = false;
+    var vh = window.innerHeight, vw = window.innerWidth, y = window.pageYOffset || 0;
+    if (hint) hint.style.opacity = clamp(1 - y / 140).toFixed(2);
+    if (reduce) return;
+    for (var k = 0; k < pulls.length; k++) {
+      var it = pulls[k], top = it.sec.getBoundingClientRect().top;
+      /* the page's content is lifted by the thread as its edge climbs the screen */
+      if (it.wrap) {
+        var p = clamp((vh - top) / (vh * 0.62));
+        it.wrap.style.transform = p >= 1 ? '' : 'translate3d(0,' + ((1 - p) * 70).toFixed(1) + 'px,0)';
       }
-      function heroProgress() {
-        var r = hero.getBoundingClientRect(), range = hero.offsetHeight - sticky.offsetHeight;
-        return range > 0 ? clamp(-r.top / range) : 1;
-      }
-      addScrub(function () { return clamp(heroProgress() / 0.88); }, function (v) {
-        setStitch(v);
-        if (hint) hint.style.opacity = clamp(1 - v * 8).toFixed(2);
-      }, 0.12);
-      hero.classList.add('ready');
-    } catch (err) {
-      hero.classList.add('ready');
-      $$('.stitch', svg).forEach(function (p) { p.removeAttribute('mask'); });
-      if (window.console) console.warn('hero scrub disabled', err);
+      var show = top < vh - 2 && top > 26;
+      if (!show) { if (it.shown) { it.g.style.display = 'none'; it.shown = false; } continue; }
+      if (!it.shown) { it.g.style.display = ''; it.shown = true; }
+      /* hugs the left edge, in the page margin, and sways only a few pixels so it never crosses text */
+      var x = Math.min(26, Math.max(11, vw * 0.02)), ey = top - 29;
+      var amp = Math.min(7, x - 5) * clamp(top / vh) * Math.sin(top * 0.011 + it.i);
+      var d = 'M' + x.toFixed(1) + ',-12 C' + (x + amp).toFixed(1) + ',' + (ey * 0.3).toFixed(1) + ' ' + (x - amp).toFixed(1) + ',' + (ey * 0.7).toFixed(1) + ' ' + x.toFixed(1) + ',' + ey.toFixed(1);
+      it.th.setAttribute('d', d); it.th2.setAttribute('d', d);
+      it.nd.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + top.toFixed(1) + ')');
+      it.g.style.opacity = clamp((top - 26) / 60).toFixed(2);
     }
-  })();
+  }
+  function queuePull() { if (!pullQueued) { pullQueued = true; requestAnimationFrame(updatePull); } }
+  window.addEventListener('scroll', queuePull, { passive: true });
+  window.addEventListener('resize', queuePull);
+  updatePull();
 
   /* ---- thread timelines (about + process) ---- */
   var threads = [];
@@ -814,7 +802,7 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
   });
   measure(); kick();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measure(); kick(); });
-  window.addEventListener('load', function () { measure(); kick(); });
+  window.addEventListener('load', function () { measure(); kick(); queuePull(); });
 
   /* ---- wipe reveals: measured on scroll (IntersectionObserver ignores clipped targets) ---- */
   var pending = $$('[data-rv]');
@@ -831,35 +819,45 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
   checkReveals();
 
   /* ================= contact form -> opens the visitor's email app ================= */
-  var form = $('#form'), err = $('#err');
-  if (form) {
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var f = new FormData(form), t = D[lang];
-      var name = String(f.get('name') || '').trim(), msg = String(f.get('message') || '').trim();
-      var mail = String(f.get('email') || '').trim(), co = String(f.get('company') || '').trim();
-      var mk = $('#f-mk');
-      var mkText = mk ? mk.options[mk.selectedIndex].textContent : '';
-      
-      if (!name || !msg) {
-        if (err) err.hidden = false;
-        var focusEl = name ? $('#f-msg') : $('#f-name');
-        if (focusEl) focusEl.focus();
-        return;
-      }
-      
-      if (err) err.hidden = true;
-      var body = msg + '\n\n---\n' + t.mailName + ': ' + name + (mail ? '\n' + t.mailEmail + ': ' + mail : '') + (co ? '\n' + t.mailCo + ': ' + co : '') + '\n' + t.mailMk + ': ' + mkText;
-      var subject = t.mailSubject + name + (co ? ' (' + co + ')' : '');
-      var url = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-      
-      if (!window.__ht) window.__ht = {};
-      window.__ht.lastMailto = url;
-      window.location.href = url;
+  var form = $('#form'), err = $('#err'), sent = $('#sent'), copied = $('#copied');
+  var lastBody = '', lastSubject = '';
+  function copyText(txt) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(txt);
+    return new Promise(function (ok, no) {
+      var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;left:-9999px;top:0;font-size:16px';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy') ? ok() : no(); } catch (e) { no(e); }
+      document.body.removeChild(ta);
     });
   }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = new FormData(form), t = D[lang];
+    var name = String(f.get('name') || '').trim(), msg = String(f.get('message') || '').trim();
+    var mail = String(f.get('email') || '').trim(), co = String(f.get('company') || '').trim();
+    var mk = $('#f-mk'); var mkText = mk.options[mk.selectedIndex].textContent;
+    if (!name || !msg) { err.hidden = false; (name ? $('#f-msg') : $('#f-name')).focus(); return; }
+    err.hidden = true; copied.textContent = '';
+    lastBody = msg + '\n\n---\n' + t.mailName + ': ' + name + (mail ? '\n' + t.mailEmail + ': ' + mail : '') + (co ? '\n' + t.mailCo + ': ' + co : '') + '\n' + t.mailMk + ': ' + mkText;
+    lastSubject = t.mailSubject + name + (co ? ' (' + co + ')' : '');
+    var q = 'subject=' + encodeURIComponent(lastSubject) + '&body=' + encodeURIComponent(lastBody);
+    var mailto = 'mailto:' + EMAIL + '?' + q;
+    var gmail = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(EMAIL) + '&' + q;
+    $('#aApp').setAttribute('href', mailto);
+    $('#aGmail').setAttribute('href', gmail);
+    sent.hidden = false;
+    window.__ht.lastMailto = mailto; window.__ht.lastGmail = gmail;
+    /* try the email app right away (a real anchor click is the most reliable way across browsers) */
+    var a = document.createElement('a'); a.href = mailto; a.style.display = 'none';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  });
+  $('#bCopy').addEventListener('click', function () {
+    var txt = 'To: ' + EMAIL + '\nSubject: ' + lastSubject + '\n\n' + lastBody;
+    copyText(txt).then(function () { copied.textContent = D[lang].copied; }, function () { copied.textContent = txt; });
+  });
 
-  window.__ht = { applyLang: applyLang, D: D, kick: kick, hasLenis: function () { return !!lenis; } };
+  window.__ht = { applyLang: applyLang, D: D, kick: kick, updatePull: updatePull, hasLenis: function () { return !!lenis; } };
 })();
 </script>
 </body>
