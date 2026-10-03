@@ -223,24 +223,37 @@ section[id]{scroll-margin-top:var(--hdr)}
 }
 
 /* ---------- contact ---------- */
-.ct-grid{display:grid;gap:clamp(36px,6vw,72px);grid-template-columns:1fr}
+.ct-grid{display:grid;gap:clamp(36px,6vw,72px);grid-template-columns:minmax(0,1fr);align-items:start}
 .ct-lines{margin-top:34px;display:grid;gap:22px}
 .ct-lines dt{font-size:.88rem;font-weight:600;color:rgba(16,27,51,.7)}
 .ct-lines dd{font-family:var(--f-display);font-weight:800;font-size:clamp(1.05rem,4.4vw,1.55rem);letter-spacing:-.01em;overflow-wrap:anywhere;line-height:1.3}
 .ct-lines dd.plain{font-family:var(--f-body);font-weight:500;font-size:1rem;letter-spacing:0}
 .ct-lines a{text-decoration:none;background:linear-gradient(var(--thread),var(--thread)) 0 100%/100% 2px no-repeat;padding-bottom:2px}
 .ct-lines a:hover{color:var(--thread-d)}
+/* map */
+.map-box{margin-top:34px;padding:8px;background:#fff;border-radius:4px;position:relative;box-shadow:0 20px 44px -28px rgba(16,27,51,.55)}
+.map-box::after{content:"";position:absolute;inset:3px;border:1.5px dashed rgba(16,27,51,.22);border-radius:3px;pointer-events:none;z-index:2}
+.map{position:relative;height:clamp(250px,62vw,340px);overflow:hidden;border-radius:2px;background-color:var(--paper2);background-image:linear-gradient(rgba(16,27,51,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(16,27,51,.06) 1px,transparent 1px);background-size:28px 28px}
+.map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;pointer-events:none}
+.map.live iframe{pointer-events:auto}
+/* until the visitor opts in, the map does not capture page scrolling (wheel / touch) */
+.map-shield{position:absolute;inset:0;z-index:1;width:100%;border:0;background:transparent;cursor:pointer;display:flex;align-items:flex-end;justify-content:flex-start;padding:12px;font:600 .85rem var(--f-body);color:var(--ink);text-align:left}
+.map-shield span{background:rgba(238,241,244,.95);border:1.5px dashed var(--ink);border-radius:999px;padding:7px 14px;box-shadow:0 8px 18px -10px rgba(16,27,51,.6);transition:background .25s,color .25s}
+.map-shield:hover span{background:var(--ink);color:var(--paper);border-style:solid}
+.map.live .map-shield{display:none}
+.map-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.map-links .btn{min-height:44px;padding:0 20px;font-size:.9rem}
 .fm{background:#fff;padding:clamp(22px,4vw,40px);border-radius:4px;position:relative;box-shadow:0 20px 44px -28px rgba(16,27,51,.55)}
 .fm::after{content:"";position:absolute;inset:9px;border:1.5px dashed rgba(16,27,51,.22);border-radius:2px;pointer-events:none}
-.fm form{position:relative;z-index:1;display:grid;gap:18px}
-.fld{display:grid;gap:6px}
-.fld.two{gap:18px}
+.fm form{position:relative;z-index:1;display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
+.fld{display:grid;gap:6px;min-width:0}
+.fld.two{gap:18px;grid-template-columns:minmax(0,1fr)}
 .fld label{font-size:.88rem;font-weight:600}
-.fld input,.fld select,.fld textarea{width:100%;min-height:48px;font:400 16px var(--f-body);color:var(--ink);background:var(--paper);border:1.5px solid transparent;border-bottom-color:var(--ink);border-radius:4px 4px 0 0;padding:10px 12px;-webkit-appearance:none;appearance:none}
+.fld input,.fld select,.fld textarea{width:100%;min-width:0;max-width:100%;text-overflow:ellipsis;min-height:48px;font:400 16px var(--f-body);color:var(--ink);background:var(--paper);border:1.5px solid transparent;border-bottom-color:var(--ink);border-radius:4px 4px 0 0;padding:10px 12px;-webkit-appearance:none;appearance:none}
 .fld textarea{min-height:130px;resize:vertical}
 .fld select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23101B33' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
 .fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--thread);background:#fff}
-@media (min-width:560px){.fld.two{grid-template-columns:1fr 1fr}}
+@media (min-width:560px){.fld.two{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
 .err{color:#B3260E;font-size:.9rem;font-weight:600}
 .err[hidden]{display:none}
 .fm .btn{width:100%}
@@ -250,7 +263,7 @@ section[id]{scroll-margin-top:var(--hdr)}
 .sent .acts{display:flex;flex-wrap:wrap;gap:10px}
 .sent .btn{width:auto;min-height:44px;padding:0 18px;font-size:.9rem}
 .sent .copied{font-size:.88rem;font-weight:600;color:var(--thread-d)}
-@media (min-width:900px){.ct-grid{grid-template-columns:1fr 1fr}}
+@media (min-width:900px){.ct-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
 
 /* ---------- footer ---------- */
 footer{background:var(--ink);color:rgba(238,241,244,.82);padding:44px var(--pad) calc(44px + env(safe-area-inset-bottom)) calc(var(--pad) + 8px);font-size:.9rem}
@@ -497,6 +510,16 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
         <div><dt data-i18n="ct_phone">Phone</dt><dd><a href="tel:+84235382377">+84 235 3823 77</a></dd></div>
         <div><dt data-i18n="ct_addr">Factory</dt><dd class="plain" data-i18n="fv_loc">Chợ Lò Industrial Cluster, Chiên Đàn Commune, Da Nang City, Vietnam</dd></div>
       </dl>
+      <div class="map-box" data-rv>
+        <div class="map" id="map">
+          <iframe id="mapFrame" src='https://www.google.com/maps?q=15.546567,108.46052&z=17&output=embed&amp;hl=en' data-src-base='https://www.google.com/maps?q=15.546567,108.46052&z=17&output=embed' title="Map showing the Hoa Tho - Phu Ninh factory location" data-i18n-title="map_title" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          <button type="button" class="map-shield" id="mapShield"><span data-i18n="map_tap">Click or tap to use the map</span></button>
+        </div>
+      </div>
+      <div class="map-links">
+        <a class="btn ghost" href='https://www.google.com/maps/place/C%C3%B4ng+Ty+C%E1%BB%95+Ph%E1%BA%A7n+May+H%C3%B2a+Th%E1%BB%8D+-+Ph%C3%BA+Ninh+(Hoa+Tho+-+Phu+Ninh+Garment+JSC.)/@15.546567,108.46052,17z/data=!3m1!4b1!4m6!3m5!1s0x3169c2b6aaaaaaab:0xd3bf2cdc6167424b!8m2!3d15.546567!4d108.46052!16s%2Fg%2F1pzy680kv' target="_blank" rel="noopener" data-i18n="map_open">Open in Google Maps</a>
+        <a class="btn ghost" href='https://www.google.com/maps/dir/?api=1&destination=15.546567,108.46052' target="_blank" rel="noopener" data-i18n="map_dir">Get directions</a>
+      </div>
     </div>
 
     <div class="fm" data-rv>
@@ -605,6 +628,7 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
       ct_email: 'Email', ct_phone: 'Phone', ct_addr: 'Factory',
       lb_name: 'Your name', lb_email: 'Your email', lb_co: 'Company', lb_mk: 'Destination market', lb_msg: 'Message',
       o_eu: 'European Union', o_us: 'United States', o_jp: 'Japan', o_ot: 'Other',
+      map_title: 'Map showing the Hoa Tho - Phu Ninh factory location', map_tap: 'Click or tap to use the map', map_open: 'Open in Google Maps', map_dir: 'Get directions',
       err: 'Please enter your name and a message.', btn_send: 'Open email app to send',
       sent_t: 'Email did not open? Use one of these:', sent_app: 'Open email app', sent_gmail: 'Open in Gmail', sent_copy: 'Copy message', copied: 'Copied. Paste it into an email to phuninhhoatho@gmail.com.',
       ft_tax: 'Tax code', ft_rights: 'All rights reserved.',
@@ -656,6 +680,7 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
       ct_email: 'Email', ct_phone: 'Điện thoại', ct_addr: 'Nhà máy',
       lb_name: 'Tên của bạn', lb_email: 'Email của bạn', lb_co: 'Công ty', lb_mk: 'Thị trường đến', lb_msg: 'Nội dung',
       o_eu: 'Liên minh châu Âu', o_us: 'Hoa Kỳ', o_jp: 'Nhật Bản', o_ot: 'Khác',
+      map_title: 'Bản đồ vị trí nhà máy May Hòa Thọ - Phú Ninh', map_tap: 'Chạm hoặc nhấp để dùng bản đồ', map_open: 'Mở trong Google Maps', map_dir: 'Chỉ đường',
       err: 'Vui lòng nhập tên và nội dung.', btn_send: 'Mở ứng dụng email để gửi',
       sent_t: 'Email chưa mở? Hãy dùng một trong các cách sau:', sent_app: 'Mở ứng dụng email', sent_gmail: 'Mở bằng Gmail', sent_copy: 'Sao chép nội dung', copied: 'Đã sao chép. Hãy dán vào email gửi tới phuninhhoatho@gmail.com.',
       ft_tax: 'Mã số thuế', ft_rights: 'Bảo lưu mọi quyền.',
@@ -671,6 +696,9 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
     var md = $('meta[name="description"]'); if (md) md.setAttribute('content', t.desc);
     $$('[data-i18n]').forEach(function (el) { var k = el.getAttribute('data-i18n'); if (t[k] != null) el.textContent = t[k]; });
     $$('[data-i18n-aria]').forEach(function (el) { var k = el.getAttribute('data-i18n-aria'); if (t[k] != null) el.setAttribute('aria-label', t[k]); });
+    $$('[data-i18n-title]').forEach(function (el) { var k = el.getAttribute('data-i18n-title'); if (t[k] != null) el.setAttribute('title', t[k]); });
+    var mf = $('#mapFrame');
+    if (mf) { var mu = mf.getAttribute('data-src-base') + '&hl=' + lang; if (mf.getAttribute('src') !== mu) mf.setAttribute('src', mu); }
     $$('[data-i18n-list]').forEach(function (ul) {
       var k = ul.getAttribute('data-i18n-list'); if (t[k] == null) return;
       ul.textContent = '';
@@ -1023,6 +1051,18 @@ footer strong{color:#fff;font-family:var(--f-display);font-size:1.1rem}
     var txt = 'To: ' + EMAIL + '\nSubject: ' + lastSubject + '\n\n' + lastBody;
     copyText(txt).then(function () { copied.textContent = D[lang].copied; }, function () { copied.textContent = txt; });
   });
+
+  /* ---- map: opt-in interaction so it never traps page scrolling ---- */
+  (function initMap() {
+    var box = $('#map'), shield = $('#mapShield'), frame = $('#mapFrame');
+    if (!box || !shield) return;
+    function on() { box.classList.add('live'); }
+    function off() { box.classList.remove('live'); }
+    shield.addEventListener('click', on);
+    document.addEventListener('pointerdown', function (e) { if (box.classList.contains('live') && !box.contains(e.target)) off(); }, true);
+    box.addEventListener('mouseleave', function () { off(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') off(); });
+  })();
 
   window.__ht = { applyLang: applyLang, D: D, kick: kick, updatePull: updatePull, hasLenis: function () { return !!lenis; } };
 })();
